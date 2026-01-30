@@ -1,0 +1,51 @@
+/* ===============================
+   PRIMARY LOCAL FONT (TTF)
+   =============================== */
+@font-face {
+  font-family: "PrimaryFont";
+  src:
+    url("../assets/fonts/font.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ===============================
+   GOOGLE FONT FALLBACKS
+   =============================== */
+
+/* DM Sans (body fallback) */
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
+
+/* Barlow Condensed (heading fallback) */
+@import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+/* ===============================
+   HEADING FONT FALLBACKS
+   =============================== */
+
+/* Replacement for Base Neue Trial */
+@font-face {
+  font-family: "Base Neue Trial";
+  src:A
+    local("Barlow Condensed"),
+    local("BarlowCondensed-Regular");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* System condensed fallback */
+@font-face {
+  font-family: "Base Neue Trial Fallback";
+  src:
+    local("Arial Narrow"),
+    local("Arial");
+  font-weight: 700;
+  font-style: normal;
+  font-stretch: condensed;
+  ascent-override: 95%;
+  descent-override: 25%;
+  line-gap-override: 0%;
+  font-display: swap;
+}

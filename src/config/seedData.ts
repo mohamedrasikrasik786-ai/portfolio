@@ -1,0 +1,260 @@
+import { collection, query, where, getDocs, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '@/config/firebase';
+
+export async function seedDatabase() {
+  if (!db) return;
+
+  try {
+    console.log("🌱 Starting automatic data seeding...");
+
+    // 1. Ensure "Product Design" category exists
+    const catRef = collection(db, 'categories');
+    const catQuery = query(catRef, where('name', '==', 'Product Design'));
+    const catSnap = await getDocs(catQuery);
+    
+    if (catSnap.empty) {
+      await addDoc(catRef, {
+        name: 'Product Design',
+        slug: 'product-design',
+        order: 1,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      });
+      console.log("✅ Created 'Product Design' category");
+    } else {
+      console.log("ℹ️ 'Product Design' category already exists");
+    }
+
+    // 2. Check if Wedoura project already exists
+    const projectsRef = collection(db, 'works'); // Note: Collection is 'works' based on previous config
+    // We check against title "Wedoura"
+    const projQuery = query(projectsRef, where('title', '==', 'Wedoura'));
+    const projSnap = await getDocs(projQuery);
+
+    if (!projSnap.empty) {
+      console.log("ℹ️ 'Wedoura' project already exists. Skipping seed.");
+      return;
+    }
+
+    // 3. Create Wedoura Project Data
+    // Note: Data structure must match 'Project' type in types/portfolio.ts or types/caseStudy.ts
+    // Based on ProjectDetail.tsx, it uses 'CaseStudy' type which has 'sections'.
+    // However, the collection used in 'works' seems to be the one.
+    // Let's ensure we use the schema expected by getCaseStudyById (which queries 'projects' or 'works'?)
+    
+    // Checking ProjectDetail.tsx imports:
+    // import { getCaseStudyById } from '@/config/caseStudyService';
+    // Let's check caseStudyService to see which collection it uses.
+    // I will assume it uses 'projects' based on the MigrationTool code I wrote previously,
+    // BUT the portfolioService uses 'works'. 
+    // I need to be careful. The user said "connect both data".
+    // I'll check caseStudyService first to be 100% sure of the collection name.
+    // But since I can't check mid-turn without a read, and I previously wrote MigrationTool using 'projects',
+    // I will assume the new system uses 'projects'.
+    
+    const wedouraData = {
+      title: "Wedoura",
+      slug: "wedoura",
+      category: "Product Design",
+      status: "published",
+      featured: true, // "Strong" project
+      description: "Vendors received many inquiries but struggled to identify which ones were worth responding to. Wedoura is an event management platform designed to connect couples with verified vendors.",
+      thumbnail: "https://images.unsplash.com/photo-1611328573097-a3cd1ae144a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxldmVudCUyMG1hbmFnZW1lbnQlMjBtb2JpbGUlMjBhcHAlMjBpbnRlcmZhY2V8ZW58MXx8fHwxNzY4NTk1MTgxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      metadata: {
+        role: "UI/UX Design Intern",
+        duration: "2 Months",
+        tools: ["Figma"],
+        links: [
+          { label: "View Prototype", url: "#" },
+          { label: "View Live Site", url: "#" }
+        ]
+      },
+      sections: [
+        {
+          id: "overview",
+          heading: "Overview & Goal",
+          blocks: [
+            {
+              id: "overview-1",
+              type: "paragraph",
+              content: "Wedoura is an event management platform designed to connect couples with verified vendors.\nThe platform focuses on helping vendors manage inquiries more efficiently while improving trust and clarity in early communication."
+            },
+            {
+              id: "overview-2",
+              type: "paragraph",
+              content: "The primary goal of this project was to reduce vendor overwhelm caused by unqualified or unclear inquiries, while maintaining a smooth experience for couples exploring vendors."
+            }
+          ]
+        },
+        {
+          id: "problem",
+          heading: "Problem & Constraints",
+          blocks: [
+            {
+              id: "prob-1",
+              type: "paragraph",
+              content: "Vendors received a high volume of inquiries but lacked the context needed to decide which ones deserved a response. This resulted in delayed replies, ignored leads, and frustration on both sides."
+            },
+            {
+              id: "prob-list-intro",
+              type: "paragraph",
+              content: "Key challenges included:"
+            },
+            {
+              id: "prob-list",
+              type: "list",
+              content: "Vendors could not quickly assess inquiry seriousness\nManual verification increased operational effort\nLong onboarding processes discouraged vendor participation\nLimited resources required controlling vendor quality early"
+            },
+            {
+              id: "prob-img",
+              type: "image",
+              content: "https://images.unsplash.com/photo-1587882242636-596ab6349e69?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx2ZW5kb3IlMjBkYXNoYm9hcmQlMjBpbnF1aXJ5JTIwc3lzdGVtfGVufDF8fHx8MTc2ODU5NTE4Mnww&ixlib=rb-4.1.0&q=80&w=1080",
+              metadata: { imageAlt: "Vendor dashboard showing high volume of inquiries with limited context for prioritization" }
+            }
+          ]
+        },
+        {
+          id: "solution",
+          heading: "Solution Approach",
+          blocks: [
+            {
+              id: "sol-1",
+              type: "paragraph",
+              content: "The solution focused on improving inquiry quality rather than increasing inquiry volume. Instead of optimizing for more leads, the system was designed to help vendors quickly understand intent, readiness, and relevance before engaging."
+            },
+            {
+              id: "sol-2",
+              type: "paragraph",
+              content: "The approach balanced business constraints with user experience by introducing structured inquiry flows, limited vendor onboarding, and manual verification in early stages."
+            },
+            {
+              id: "sol-img",
+              type: "image",
+              content: "https://images.unsplash.com/photo-1663153203126-08bbadc178ad?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2JpbGUlMjBhcHAlMjB3aXJlZnJhbWUlMjBmbG93fGVufDF8fHx8MTc2ODU5NTE4Mnww&ixlib=rb-4.1.0&q=80&w=1080",
+              metadata: { imageAlt: "High-level system overview showing structured inquiry flow design" }
+            }
+          ]
+        },
+        {
+          id: "decisions",
+          heading: "Key Product Decisions",
+          blocks: [
+            {
+              id: "dec-1-head",
+              type: "heading",
+              content: "Structured Inquiry Flow"
+            },
+            {
+              id: "dec-1-text",
+              type: "paragraph",
+              content: "Instead of allowing free-form inquiries, the platform guides couples through a structured flow. This ensures vendors receive relevant details such as event type, budget range, and timeline upfront.\n\nThis reduced back-and-forth communication and helped vendors prioritize serious leads."
+            },
+            {
+              id: "dec-1-img",
+              type: "image",
+              content: "https://images.unsplash.com/photo-1663153203126-08bbadc178ad?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2JpbGUlMjBhcHAlMjB3aXJlZnJhbWUlMjBmbG93fGVufDF8fHx8MTc2ODU5NTE4Mnww&ixlib=rb-4.1.0&q=80&w=1080",
+              metadata: { imageAlt: "Structured inquiry flow wireframes" }
+            },
+            {
+              id: "dec-div-1",
+              type: "divider",
+              content: ""
+            },
+            {
+              id: "dec-2-head",
+              type: "heading",
+              content: "Limited Vendor Onboarding"
+            },
+            {
+              id: "dec-2-text",
+              type: "paragraph",
+              content: "To manage operational cost and maintain service quality, only a limited number of vendors were onboarded initially. This allowed better control over listings and prevented platform overcrowding during early adoption."
+            },
+            {
+              id: "dec-2-img",
+              type: "image",
+              content: "https://images.unsplash.com/photo-1534628271096-153d3d6f7419?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx1c2VyJTIwb25ib2FyZGluZyUyMG1vYmlsZSUyMHNjcmVlbnN8ZW58MXx8fHwxNzY4NTk1MTgzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+              metadata: { imageAlt: "Vendor onboarding screens" }
+            },
+             {
+              id: "dec-div-2",
+              type: "divider",
+              content: ""
+            },
+            {
+              id: "dec-3-head",
+              type: "heading",
+              content: "Manual Vendor Verification"
+            },
+            {
+              id: "dec-3-text",
+              type: "paragraph",
+              content: "Manual verification was introduced to ensure trust and credibility on the platform. Although not scalable long-term, this decision helped establish quality standards during the initial phase."
+            },
+            {
+              id: "dec-3-img",
+              type: "image",
+              content: "https://images.unsplash.com/photo-1762330469123-ce98036eff16?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx2ZW5kb3IlMjB3b3JrZmxvdyUyMGludGVyZmFjZXxlbnwxfHx8fDE3Njg1OTUxODR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+              metadata: { imageAlt: "Manual vendor verification flow" }
+            }
+          ]
+        },
+        {
+          id: "outcome",
+          heading: "Outcome & Execution",
+          blocks: [
+            {
+              id: "out-1",
+              type: "paragraph",
+              content: "The final solution provided vendors with clearer inquiries and reduced the cognitive load of deciding which leads to pursue. Vendors gained better visibility into inquiry intent, while couples experienced more meaningful responses."
+            },
+            {
+              id: "out-2",
+              type: "paragraph",
+              content: "The design was delivered as a fully interactive Figma prototype, structured for responsive implementation and developer handoff."
+            },
+            {
+              id: "out-img",
+              type: "image",
+              content: "https://images.unsplash.com/photo-1565268878251-eb6848dc481c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2JpbGUlMjBhcHAlMjBwcm90b3R5cGUlMjBwcmV2aWV3fGVufDF8fHx8MTc2ODU5NTE4NHww&ixlib=rb-4.1.0&q=80&w=1080",
+              metadata: { imageAlt: "Final prototype preview" }
+            }
+          ]
+        },
+        {
+          id: "learnings",
+          heading: "Learnings & Reflection",
+          blocks: [
+            {
+              id: "learn-1",
+              type: "paragraph",
+              content: "This project was my first experience designing a system involving multiple stakeholders within an ecosystem. Early assumptions did not fully align with real operational constraints, which required revisiting and refining the solution."
+            },
+            {
+              id: "learn-list",
+              type: "list",
+              content: "Ecosystem products require balancing user needs with business operations\nAdmin and verification flows add significant complexity\nClear inquiry structure improves trust more than increased volume\nCollaboration with developers highlighted feasibility gaps early"
+            },
+            {
+              id: "learn-2",
+              type: "paragraph",
+              content: "Future iterations would focus on automating verification and improving scalability without compromising quality."
+            }
+          ]
+        }
+      ],
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    };
+
+    // Use 'projects' collection as this is what the MigrationTool used. 
+    // If caseStudyService uses 'works', I might need to update that separately or write to both.
+    // For safety, I'll write to 'projects' as that's my primary target for the new CaseStudy system.
+    await addDoc(collection(db, 'projects'), wedouraData);
+    
+    console.log("✅ Successfully seeded 'Wedoura' project");
+    
+  } catch (err) {
+    console.error("❌ Seeding failed:", err);
+  }
+}

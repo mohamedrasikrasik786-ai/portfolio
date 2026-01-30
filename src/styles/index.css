@@ -1,0 +1,55 @@
+@import "./fonts.css";
+@import "./tailwind.css";
+@import "./theme.css";
+@import "./case-study-theme.css";
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+    position: relative;
+  }
+  
+  body {
+    font-family:
+      PrimaryFont,
+      "DM Sans",
+      ui-sans-serif,
+      system-ui,
+      sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family:
+      "Base Neue Trial",
+      "Barlow Condensed",
+      "Arial Narrow",
+      sans-serif;
+  }
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* NUCLEAR: CSS Containment for performance */
+  section {
+    contain: layout style paint;
+  }
+  
+  /* NUCLEAR: Prevent hover flickering */
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* NUCLEAR: Disable all transitions during scroll */
+  .scrolling * {
+    transition: none !important;
+  }
+}
