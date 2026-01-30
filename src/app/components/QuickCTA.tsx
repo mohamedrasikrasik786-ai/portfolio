@@ -32,14 +32,14 @@ function ResumeIcon({ color }: { color: string }) {
       >
         <g>
           <path
-            d={svgPaths.p34aacb00}
+            d={svgPaths.p3fe13600}
             stroke={color}
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeWidth="1.16667"
           />
           <path
-            d={svgPaths.p27169580}
+            d={svgPaths.p3fe13600}
             stroke={color}
             strokeLinecap="round"
             strokeLinejoin="round"

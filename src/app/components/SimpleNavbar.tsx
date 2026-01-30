@@ -148,7 +148,7 @@ export function SimpleNavbar({ isDark, toggleTheme }: SimpleNavbarProps) {
               {/* Let's connect button - Desktop */}
               <a
                 href="#contact"
-                className={`hidden lg:flex ${isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-[#0E0E0E]'} items-center justify-center px-[16px] py-[6px] rounded-[6px] transition-all duration-300 hover:bg-[#FFEB01] hover:text-[#0E0E0E] group shrink-0`}
+                className={`hidden lg:flex ${isDark ? 'bg-white/10 text-white' : 'bg-black/5 text-[#0E0E0E]'} items-center justify-center px-[16px] py-[6px] rounded-[6px] transition-all duration-300 hover:bg-[#FFEB01] hover:text-[#0E0E0E] group shrink-0 m-1`}
               >
                 <p className={`font-['DM_Sans:Regular',sans-serif] font-normal leading-[normal] text-[20px] tracking-[-0.24px] whitespace-nowrap transition-colors duration-300`}>
                   Contact

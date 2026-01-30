@@ -146,8 +146,8 @@ export const EnhancedPreloader = ({
     >
       <div className="relative w-full max-w-md px-8">
         {/* Large Percentage */}
-        <div className="text-[120px] md:text-[180px] font-bold leading-none tracking-tighter text-[#EAEAEA] flex justify-start">
-          <span>{progress}</span>
+        <div className="text-[120px] md:text-[180px] font-bold leading-none text-[#EAEAEA] flex justify-start">
+           <span>0</span>
           <span className="text-[40px] md:text-[60px] self-start mt-4 md:mt-8">%</span>
         </div>
         
